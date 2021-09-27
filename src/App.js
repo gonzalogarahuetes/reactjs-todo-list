@@ -35,6 +35,7 @@ class App extends Component {
         : [],
 
       lightmode: true,
+      value: "",
     };
     this.saveNewTasks = this.saveNewTasks.bind(this);
     this.removeTask = this.removeTask.bind(this);
@@ -43,6 +44,8 @@ class App extends Component {
     this.clearCompletedTasks = this.clearCompletedTasks.bind(this);
     this.changeTitle = this.changeTitle.bind(this);
     this.handleDarkMode = this.handleDarkMode.bind(this);
+    this.willEnter = this.willEnter.bind(this);
+    this.willLeave = this.willLeave.bind(this);
   }
   handleDarkMode() {
     const { lightmode } = this.state;
@@ -141,6 +144,46 @@ class App extends Component {
     });
   }
 
+  // Animation methods
+
+  getDefaultStyles = () => {
+    return this.state.tasks.map((task) => ({
+      ...task,
+      style: { height: 0, opacity: 1 },
+    }));
+  };
+
+  getStyles = () => {
+    const { tasks, value } = this.state;
+    return tasks
+      .filter(({ text }) => {
+        return text.toUpperCase().indexOf(value.toUpperCase()) >= 0;
+      })
+      .map((todo) => {
+        return {
+          ...todo,
+          style: {
+            height: spring(60, presets.gentle),
+            opacity: spring(1, presets.gentle),
+          },
+        };
+      });
+  };
+
+  willEnter() {
+    return {
+      height: 0,
+      opacity: 1,
+    };
+  }
+
+  willLeave() {
+    return {
+      height: spring(0),
+      opacity: spring(0),
+    };
+  }
+
   render() {
     const { lightmode } = this.props;
     const { tasks, activeTasks } = this.state;
@@ -163,7 +206,10 @@ class App extends Component {
           </header>
           <section className="main__window">
             <div>
-              <NewTodo saveNewTasks={this.saveNewTasks} />
+              <NewTodo
+                saveNewTasks={this.saveNewTasks}
+                getStyles={this.getStyles}
+              />
             </div>
             <div className="todo__body">
               <DragDropContext
@@ -184,6 +230,10 @@ class App extends Component {
                   <Switch>
                     <Route path="/completed">
                       <Completed
+                        defaultStyles={this.getDefaultStyles()}
+                        styles={this.getStyles()}
+                        willLeave={this.willLeave}
+                        willEnter={this.willEnter}
                         tasks={tasks}
                         completeTask={this.completeTask}
                         removeTask={this.removeTask}
