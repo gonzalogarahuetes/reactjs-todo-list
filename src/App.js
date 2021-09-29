@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 
-import DarkMode from "./components/DarkMode";
 import "./main.scss";
 import NewTodo from "./components/NewTodo";
 import Footer from "./components/Footer/Footer";
