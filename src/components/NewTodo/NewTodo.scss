@@ -12,6 +12,9 @@
   gap: 1rem;
 
   &--circle {
+    @media screen and (max-width: 800px) {
+      display: none;
+    }
     border-radius: 100%;
     border: 2px solid #7e76b7;
     height: 20px;
