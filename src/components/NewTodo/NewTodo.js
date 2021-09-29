@@ -50,17 +50,18 @@ export default class NewTodo extends Component {
 
   render() {
     const { placeHolder } = this.state;
+    const { isDark } = this.props;
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <div className="new__task">
+        <div className={"new__task" + (isDark ? " dark-mode" : "")}>
           <span className="new__task--circle" />
           <input
             type="text"
             placeholder={placeHolder}
             onChange={this.handleChange}
             required
-            className="new__task--input"
+            className={"new__task--input" + (isDark ? " dark-mode" : "")}
           />
           <button type="submit" className="new__task--btn">
             ↵

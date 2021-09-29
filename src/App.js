@@ -3,15 +3,18 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 
-// import img from "./img/header-light-mode-background-image.jpeg";
 import DarkMode from "./components/DarkMode";
 import "./main.scss";
 import NewTodo from "./components/NewTodo";
 import Footer from "./components/Footer/Footer";
 import bgLightImg from "./img/header-light-mode-background-image.jpeg";
+import bgDarkImg from "./img/header-dark-mode-background-image.jpeg";
 import Completed from "./components/Completed/Completed";
 import Home from "./components/Home/Home";
 import Active from "./components/Active/Active";
+import darkImg from "./img/DarkMode.svg";
+
+import lightImg from "./img/lightMode.svg";
 
 const reorder = (list, startIndex, endIndex) => {
   const result = [...list];
@@ -34,7 +37,7 @@ class App extends Component {
           )
         : [],
 
-      lightmode: true,
+      isDark: false,
     };
     this.saveNewTasks = this.saveNewTasks.bind(this);
     this.removeTask = this.removeTask.bind(this);
@@ -44,40 +47,13 @@ class App extends Component {
     this.changeTitle = this.changeTitle.bind(this);
     this.handleDarkMode = this.handleDarkMode.bind(this);
   }
-  handleDarkMode() {
-    const { lightmode } = this.state;
 
-    if (lightmode) {
-      this.setState({ lightmode: false });
-      document.getElementById("bg-top").src = bgDarkImg;
-      document.querySelector(".new__task").classList.toggle("dark-mode");
-      document.querySelector(".new__task--input").classList.toggle("dark-mode");
-      document.querySelector(".todo__body").classList.toggle("dark-mode");
-      document
-        .querySelector(".background--bottom")
-        .classList.toggle("dark-mode");
-      document.querySelectorAll(".todo__remove").forEach((element) => {
-        element.classList.toggle("dark-mode");
-      });
-      document.querySelectorAll(".todo__check").forEach((element) => {
-        element.classList.toggle("dark-mode");
-      });
-    } else {
-      this.setState({ lightmode: true });
-      document.getElementById("bg-top").src = bgLightImg;
-      document.querySelector(".new__task").classList.toggle("dark-mode");
-      document.querySelector(".new__task--input").classList.toggle("dark-mode");
-      document.querySelector(".todo__body").classList.toggle("dark-mode");
-      document
-        .querySelector(".background--bottom")
-        .classList.toggle("dark-mode");
-      document.querySelectorAll(".todo__remove").forEach((element) => {
-        element.classList.toggle("dark-mode");
-      });
-      document.querySelectorAll(".todo__check").forEach((element) => {
-        element.classList.toggle("dark-mode");
-      });
-    }
+  handleDarkMode() {
+    const { isDark } = this.state;
+
+    this.setState({
+      isDark: !isDark,
+    });
   }
   saveNewTasks(tasks, activeTasks) {
     this.setState({
@@ -142,7 +118,7 @@ class App extends Component {
   }
 
   render() {
-    const { lightmode } = this.props;
+    const { isDark, handleDarkMode } = this.state;
     const { tasks, activeTasks } = this.state;
 
     return (
@@ -151,25 +127,31 @@ class App extends Component {
           <div className="background--top">
             <img
               id="bg-top"
-              src={lightmode ? bgDarkImg : bgLightImg}
+              src={isDark ? bgDarkImg : bgLightImg}
               alt="bg-img"
             />
           </div>
-          <div className="background--bottom" />
+          <div
+            className={"background--bottom" + (isDark ? " dark-mode" : "")}
+          />
         </div>
         <main className="main">
           <header className="main--header">
-            <h1>TODOS</h1> <DarkMode />
+            <h1>TODOS</h1>
+            <button type="button" onClick={this.handleDarkMode}>
+              <img src={isDark ? lightImg : darkImg} alt="" />
+            </button>
           </header>
           <section className="main__window">
             <div>
-              <NewTodo saveNewTasks={this.saveNewTasks} />
+              <NewTodo saveNewTasks={this.saveNewTasks} isDark={isDark} />
             </div>
-            <div className="todo__body">
+            <div className={"todo__body" + (isDark ? " dark-mode" : "")}>
               <DragDropContext
                 onDragEnd={(result) => {
                   const { source, destination } = result;
                   if (!destination) return;
+
                   if (
                     source.index === destination.index &&
                     source.droppableId === destination.droppableId

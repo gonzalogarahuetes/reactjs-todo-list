@@ -37,7 +37,7 @@ export default class Todo extends Component {
   }
 
   render() {
-    const { title, id, isFinished, isEditing, index, lightmode } = this.props;
+    const { title, id, isFinished, isEditing, index, isDark } = this.props;
     const editableText =
       isEditing === true ? (
         <input
@@ -75,9 +75,7 @@ export default class Todo extends Component {
           >
             <input
               type="checkbox"
-              className={
-                "todo__check" + (lightmode === false ? "dark-mode" : "")
-              }
+              className={"todo__check" + (isDark ? "dark-mode" : "")}
               onChange={this.handleCheckChange}
               id={id}
               checked={isFinished === true && true}
@@ -86,9 +84,7 @@ export default class Todo extends Component {
             {editableText}
 
             <button
-              className={
-                "todo__remove" + (lightmode === false ? "dark-mode" : "")
-              }
+              className={"todo__remove" + (isDark ? "dark-mode" : "")}
               id={id}
               onClick={this.onClick}
               type="button"

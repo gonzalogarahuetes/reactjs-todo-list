@@ -11,14 +11,8 @@ export default class TodoList extends Component {
   }
 
   render() {
-    const {
-      tasks,
-      removeTask,
-      completeTask,
-      editTask,
-      changeTitle,
-      lightmode,
-    } = this.props;
+    const { tasks, removeTask, completeTask, editTask, changeTitle, isDark } =
+      this.props;
     return (
       <Droppable droppableId="home">
         {(droppableProvided) => (
@@ -40,6 +34,7 @@ export default class TodoList extends Component {
                   completeTask={completeTask}
                   editTask={editTask}
                   changeTitle={changeTitle}
+                  isDark={isDark}
                 />
               );
             })}
